@@ -1,0 +1,42 @@
+data:
+  train_csv: "/home/zhanglongyang/Desktop/SWaTDec2015/Physical/SWaT_Dataset_Attack_v0.csv"
+  attack_events_file: "List_of_attacks_Final.csv"
+  attack_events_sheet: 0
+  attack_start_col: "Start Time"
+  attack_end_col: "End Time"
+  attack_type_col: "Attack Point"
+  timestamp_col: "Timestamp"
+  binary_label_col: "Normal/Attack"
+  binary_attack_value: "Attack"
+  normal_label_name: "Normal"
+
+window:
+  size: 60
+  stride: 10
+  min_attack_ratio_for_type: 0.3
+
+split:
+  test_ratio: 0.2
+
+features:
+  include_slope: true
+
+training:
+  random_state: 42
+  stage2:
+    hidden_dim: 256
+    dropout: 0.2
+    batch_size: 256
+    epochs: 50
+    learning_rate: 0.001
+    weight_decay: 0.00001
+    use_balanced_loss: true
+
+inference:
+  anomaly_flag_col: "is_anomaly"
+  min_anomaly_points_per_segment: 1
+  min_anomaly_ratio_per_window: 0.1
+  unknown_threshold: 0.5
+
+artifacts:
+  dir: "artifacts"
