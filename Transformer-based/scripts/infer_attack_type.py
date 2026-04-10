@@ -2,22 +2,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter
 from pathlib import Path
-import sys
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
-SRC_DIR = ROOT_DIR / "src"
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
 
 import numpy as np
 import pandas as pd
 import torch
 
-from anomaly_attack.features import extract_window_features
 from anomaly_attack.models import make_stage2_model, predict_stage2
 
 
@@ -35,14 +31,11 @@ def parse_args() -> argparse.Namespace:
 def _load_segment_csv(path: str, timestamp_col: str) -> pd.DataFrame:
     seg = pd.read_csv(path)
     seg.columns = [str(c).strip() for c in seg.columns]
-
-    # SWAT-like files can have the real header on row 2.
     if timestamp_col not in seg.columns:
         seg_retry = pd.read_csv(path, header=1)
         seg_retry.columns = [str(c).strip() for c in seg_retry.columns]
         if timestamp_col in seg_retry.columns:
             seg = seg_retry
-
     return seg
 
 
@@ -51,13 +44,22 @@ def main() -> None:
 
     artifacts_dir = Path(args.artifacts_dir)
     checkpoint = torch.load(artifacts_dir / "stage2_model.pth", map_location="cpu")
-    feature_columns = checkpoint["feature_columns"]
+    required = {"sensor_mean", "sensor_std", "seq_len", "num_sensors"}
+    missing = required - set(checkpoint.keys())
+    if missing:
+        raise RuntimeError(
+            "Incompatible checkpoint format. Re-run scripts/train_stage2.py. Missing keys: "
+            f"{sorted(missing)}"
+        )
+
     classes = checkpoint["classes"]
-    x_mean = np.array(checkpoint["x_mean"], dtype=np.float32)
-    x_std = np.array(checkpoint["x_std"], dtype=np.float32)
+    sensor_cols_ckpt = checkpoint.get("sensor_cols", None)
+    sensor_mean = np.array(checkpoint["sensor_mean"], dtype=np.float32)
+    sensor_std = np.array(checkpoint["sensor_std"], dtype=np.float32)
+    seq_len = int(checkpoint["seq_len"])
 
     model = make_stage2_model(
-        input_dim=int(checkpoint["input_dim"]),
+        num_sensors=int(checkpoint["num_sensors"]),
         num_classes=int(checkpoint["num_classes"]),
         params=checkpoint.get("model_params", {}),
     )
@@ -67,9 +69,10 @@ def main() -> None:
         meta = json.load(f)
 
     timestamp_col = meta["timestamp_col"]
-    sensor_cols = meta["sensor_cols"]
-    window_size = int(meta["window"]["size"])
+    sensor_cols = sensor_cols_ckpt if sensor_cols_ckpt is not None else meta["sensor_cols"]
+    window_size = seq_len
     stride = int(meta["window"]["stride"])
+
     anomaly_flag_col = args.anomaly_flag_col or meta.get("anomaly_flag_col", "is_anomaly")
     min_anomaly_ratio = args.min_anomaly_ratio
     if min_anomaly_ratio is None:
@@ -79,12 +82,9 @@ def main() -> None:
     if timestamp_col not in seg.columns:
         raise ValueError(f"Missing timestamp column: {timestamp_col}")
 
-    # Fallback for running inference directly on SWAT train/test files.
     if anomaly_flag_col not in seg.columns and "Normal/Attack" in seg.columns:
         seg[anomaly_flag_col] = (seg["Normal/Attack"].astype(str).str.strip() != "Normal").astype(int)
-        print(
-            f"Warning: '{anomaly_flag_col}' not found. Derived anomaly flags from 'Normal/Attack'."
-        )
+        print(f"Warning: '{anomaly_flag_col}' not found. Derived from 'Normal/Attack'.")
 
     if anomaly_flag_col not in seg.columns:
         raise ValueError(f"Missing anomaly flag column: {anomaly_flag_col}")
@@ -99,90 +99,66 @@ def main() -> None:
     seg[anomaly_flag_col] = seg[anomaly_flag_col].astype(int)
     total_anomaly_points = int(seg[anomaly_flag_col].sum())
 
-    features = []
+    sequences = []
     window_meta = []
     anomaly_ratios = []
+
     for start in range(0, len(seg) - window_size + 1, stride):
         end = start + window_size
         w = seg.iloc[start:end]
-
         ratio = float(w[anomaly_flag_col].mean())
         if ratio < min_anomaly_ratio:
             continue
 
-        feat = extract_window_features(w, sensor_cols, include_slope=meta["include_slope"])
-        features.append(feat)
+        sequences.append(w[sensor_cols].to_numpy(dtype=np.float32))
         anomaly_ratios.append(ratio)
-        window_meta.append(
-            {
+        window_meta.append({
+            "start_time": str(w[timestamp_col].iloc[0]),
+            "end_time": str(w[timestamp_col].iloc[-1]),
+        })
+
+    if not sequences and total_anomaly_points > 0:
+        for start in range(0, len(seg) - window_size + 1, stride):
+            end = start + window_size
+            w = seg.iloc[start:end]
+            ratio = float(w[anomaly_flag_col].mean())
+            if ratio <= 0.0:
+                continue
+            sequences.append(w[sensor_cols].to_numpy(dtype=np.float32))
+            anomaly_ratios.append(ratio)
+            window_meta.append({
                 "start_time": str(w[timestamp_col].iloc[0]),
                 "end_time": str(w[timestamp_col].iloc[-1]),
-            }
-        )
+            })
 
-    if not features:
-        # Fallback: if threshold is too strict but anomalies exist, keep windows with ratio > 0.
-        if total_anomaly_points > 0:
-            for start in range(0, len(seg) - window_size + 1, stride):
-                end = start + window_size
-                w = seg.iloc[start:end]
-                ratio = float(w[anomaly_flag_col].mean())
-                if ratio <= 0.0:
-                    continue
+    if not sequences:
+        aggregate = {
+            "total_windows": 0,
+            "attack_windows": 0,
+            "dominant_predicted_type": meta["normal_label_name"],
+            "reason": "No anomaly points found in input segment" if total_anomaly_points == 0 else "No windows could be formed from anomaly points",
+        }
+        output = {"aggregate": aggregate, "window_predictions": []}
+        out_path = Path(args.output_json)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with out_path.open("w", encoding="utf-8") as f:
+            json.dump(output, f, indent=2, ensure_ascii=True)
+        print(json.dumps(aggregate, indent=2, ensure_ascii=True))
+        print(f"Full output written to: {out_path}")
+        return
 
-                feat = extract_window_features(w, sensor_cols, include_slope=meta["include_slope"])
-                features.append(feat)
-                anomaly_ratios.append(ratio)
-                window_meta.append(
-                    {
-                        "start_time": str(w[timestamp_col].iloc[0]),
-                        "end_time": str(w[timestamp_col].iloc[-1]),
-                    }
-                )
-
-        # If still empty, return a clear result instead of throwing.
-        if not features:
-            aggregate = {
-                "total_windows": 0,
-                "attack_windows": 0,
-                "dominant_predicted_type": meta["normal_label_name"],
-                "reason": (
-                    "No anomaly points found in input segment"
-                    if total_anomaly_points == 0
-                    else "No windows could be formed from anomaly points"
-                ),
-            }
-            output = {
-                "aggregate": aggregate,
-                "window_predictions": [],
-            }
-
-            out_path = Path(args.output_json)
-            out_path.parent.mkdir(parents=True, exist_ok=True)
-            with out_path.open("w", encoding="utf-8") as f:
-                json.dump(output, f, indent=2, ensure_ascii=True)
-
-            print(json.dumps(aggregate, indent=2, ensure_ascii=True))
-            print(f"Full output written to: {out_path}")
-            print(
-                "Hint: this file appears to contain no attacks. Use an anomalous segment or lower --min-anomaly-ratio."
-            )
-            return
-
-    x = pd.DataFrame(features).reindex(columns=feature_columns, fill_value=0.0).to_numpy(dtype=np.float32)
-    x_std[x_std == 0.0] = 1.0
-    x_scaled = (x - x_mean) / x_std
-    probs = predict_stage2(model, x_scaled)
+    x_seq = np.stack(sequences, axis=0).astype(np.float32)
+    sensor_std[sensor_std == 0.0] = 1.0
+    x_seq_scaled = (x_seq - sensor_mean) / sensor_std
+    probs = predict_stage2(model, x_seq_scaled)
 
     results = []
     top_labels = []
-
-    for i in range(len(x_scaled)):
+    for i in range(len(x_seq_scaled)):
         type_proba = probs[i]
         max_idx = int(np.argmax(type_proba))
         pred_type = str(classes[max_idx])
         pred_prob = float(type_proba[max_idx])
-
         if pred_prob < args.unknown_threshold:
             pred_type = "unknown_attack"
 
@@ -203,11 +179,7 @@ def main() -> None:
         "dominant_predicted_type": Counter(top_labels).most_common(1)[0][0] if top_labels else meta["normal_label_name"],
     }
 
-    output = {
-        "aggregate": aggregate,
-        "window_predictions": results,
-    }
-
+    output = {"aggregate": aggregate, "window_predictions": results}
     out_path = Path(args.output_json)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8") as f:

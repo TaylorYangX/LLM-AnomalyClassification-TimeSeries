@@ -59,7 +59,6 @@
   },
   "normal_label_name": "Normal",
   "timestamp_col": "Timestamp",
-  "include_slope": true,
   "anomaly_flag_col": "is_anomaly",
   "min_anomaly_ratio_per_window": 0.1
 }

@@ -11,7 +11,7 @@
       "is_attack": true,
       "anomaly_ratio": 0.9833333333333333,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.997712254524231
+      "predicted_type_probability": 0.9997437596321106
     },
     {
       "start_time": "2015-12-31 01:17:17",
@@ -19,7 +19,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9966363906860352
+      "predicted_type_probability": 0.9997517466545105
     },
     {
       "start_time": "2015-12-31 01:17:27",
@@ -27,7 +27,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9980897307395935
+      "predicted_type_probability": 0.999749481678009
     },
     {
       "start_time": "2015-12-31 01:17:37",
@@ -35,7 +35,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9988442659378052
+      "predicted_type_probability": 0.9997536540031433
     },
     {
       "start_time": "2015-12-31 01:17:47",
@@ -43,7 +43,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9993566870689392
+      "predicted_type_probability": 0.9997394680976868
     },
     {
       "start_time": "2015-12-31 01:17:57",
@@ -51,7 +51,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9994799494743347
+      "predicted_type_probability": 0.9997290968894958
     },
     {
       "start_time": "2015-12-31 01:18:07",
@@ -59,7 +59,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9996626377105713
+      "predicted_type_probability": 0.999713122844696
     },
     {
       "start_time": "2015-12-31 01:18:17",
@@ -67,7 +67,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9997010827064514
+      "predicted_type_probability": 0.9996845722198486
     },
     {
       "start_time": "2015-12-31 01:18:27",
@@ -75,7 +75,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9997350573539734
+      "predicted_type_probability": 0.999657392501831
     },
     {
       "start_time": "2015-12-31 01:18:37",
@@ -83,7 +83,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9997846484184265
+      "predicted_type_probability": 0.9996223449707031
     },
     {
       "start_time": "2015-12-31 01:18:47",
@@ -91,7 +91,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9997480511665344
+      "predicted_type_probability": 0.999622106552124
     },
     {
       "start_time": "2015-12-31 01:18:57",
@@ -99,7 +99,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9998200535774231
+      "predicted_type_probability": 0.9996182918548584
     },
     {
       "start_time": "2015-12-31 01:19:07",
@@ -107,7 +107,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9998880624771118
+      "predicted_type_probability": 0.9995970129966736
     },
     {
       "start_time": "2015-12-31 01:19:17",
@@ -115,7 +115,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999033212661743
+      "predicted_type_probability": 0.9995843768119812
     },
     {
       "start_time": "2015-12-31 01:19:27",
@@ -123,7 +123,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999101161956787
+      "predicted_type_probability": 0.9995664954185486
     },
     {
       "start_time": "2015-12-31 01:19:37",
@@ -131,7 +131,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999244213104248
+      "predicted_type_probability": 0.999552309513092
     },
     {
       "start_time": "2015-12-31 01:19:47",
@@ -139,7 +139,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999244213104248
+      "predicted_type_probability": 0.9995378255844116
     },
     {
       "start_time": "2015-12-31 01:19:57",
@@ -147,7 +147,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999421834945679
+      "predicted_type_probability": 0.9995133876800537
     },
     {
       "start_time": "2015-12-31 01:20:07",
@@ -155,7 +155,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999462366104126
+      "predicted_type_probability": 0.9994914531707764
     },
     {
       "start_time": "2015-12-31 01:20:17",
@@ -163,7 +163,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999573230743408
+      "predicted_type_probability": 0.9994373917579651
     },
     {
       "start_time": "2015-12-31 01:20:27",
@@ -171,7 +171,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999624490737915
+      "predicted_type_probability": 0.9994252920150757
     },
     {
       "start_time": "2015-12-31 01:20:37",
@@ -179,7 +179,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999639987945557
+      "predicted_type_probability": 0.9994081258773804
     },
     {
       "start_time": "2015-12-31 01:20:47",
@@ -187,7 +187,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999663829803467
+      "predicted_type_probability": 0.9994077682495117
     },
     {
       "start_time": "2015-12-31 01:20:57",
@@ -195,7 +195,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999696016311646
+      "predicted_type_probability": 0.9993869066238403
     },
     {
       "start_time": "2015-12-31 01:21:07",
@@ -203,7 +203,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999665021896362
+      "predicted_type_probability": 0.9993914365768433
     },
     {
       "start_time": "2015-12-31 01:21:17",
@@ -211,7 +211,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.999976396560669
+      "predicted_type_probability": 0.9994103908538818
     },
     {
       "start_time": "2015-12-31 01:21:27",
@@ -219,7 +219,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999778270721436
+      "predicted_type_probability": 0.999358594417572
     },
     {
       "start_time": "2015-12-31 01:21:37",
@@ -227,7 +227,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999754428863525
+      "predicted_type_probability": 0.9993200302124023
     },
     {
       "start_time": "2015-12-31 01:21:47",
@@ -235,7 +235,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999756813049316
+      "predicted_type_probability": 0.9992471933364868
     },
     {
       "start_time": "2015-12-31 01:21:57",
@@ -243,7 +243,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999784231185913
+      "predicted_type_probability": 0.9992576241493225
     },
     {
       "start_time": "2015-12-31 01:22:07",
@@ -251,7 +251,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999747276306152
+      "predicted_type_probability": 0.999243974685669
     },
     {
       "start_time": "2015-12-31 01:22:17",
@@ -259,7 +259,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999772310256958
+      "predicted_type_probability": 0.9992527365684509
     },
     {
       "start_time": "2015-12-31 01:22:27",
@@ -267,7 +267,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999802112579346
+      "predicted_type_probability": 0.9993034601211548
     },
     {
       "start_time": "2015-12-31 01:22:37",
@@ -275,7 +275,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999817609786987
+      "predicted_type_probability": 0.9992856383323669
     },
     {
       "start_time": "2015-12-31 01:22:47",
@@ -283,7 +283,7 @@
       "is_attack": true,
       "anomaly_ratio": 1.0,
       "predicted_type": "P-302, LIT-401",
-      "predicted_type_probability": 0.9999849796295166
+      "predicted_type_probability": 0.9992857575416565
     }
   ]
 }

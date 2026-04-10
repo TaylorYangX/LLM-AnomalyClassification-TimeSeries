@@ -17,8 +17,8 @@ def _parse_mixed_excel_datetime(series: pd.Series) -> pd.Series:
     try:
         parsed = pd.to_datetime(series, errors="coerce", format="mixed", dayfirst=True)
     except TypeError:
-        # Fallback for older pandas versions without format="mixed".
         parsed = pd.to_datetime(series, errors="coerce", dayfirst=True)
+
     numeric = pd.to_numeric(series, errors="coerce")
     numeric_mask = numeric.notna() & parsed.isna()
     if numeric_mask.any():
@@ -39,7 +39,6 @@ def load_timeseries(
     df = pd.read_csv(csv_path)
     df.columns = [str(c).strip() for c in df.columns]
 
-    # SWAT-like exports may put real headers on the second row.
     if timestamp_col not in df.columns or binary_label_col not in df.columns:
         df_retry = pd.read_csv(csv_path, header=1)
         df_retry.columns = [str(c).strip() for c in df_retry.columns]
@@ -62,9 +61,7 @@ def load_timeseries(
 
     non_sensor = {timestamp_col, binary_label_col, "attack_type"}
     sensor_cols = [
-        c
-        for c in df.columns
-        if c not in non_sensor and pd.api.types.is_numeric_dtype(df[c])
+        c for c in df.columns if c not in non_sensor and pd.api.types.is_numeric_dtype(df[c])
     ]
     if not sensor_cols:
         raise ValueError("No numeric sensor columns found.")
@@ -87,9 +84,7 @@ def load_attack_events(
     elif suffix in {".csv", ".txt"}:
         events = pd.read_csv(path)
     else:
-        raise ValueError(
-            f"Unsupported attack event file format: {path}. Use csv/xlsx/xls."
-        )
+        raise ValueError(f"Unsupported attack event file format: {path}")
 
     required = {start_col, end_col, type_col}
     missing = required - set(events.columns)

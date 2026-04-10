@@ -18,23 +18,22 @@ window:
 split:
   test_ratio: 0.2
 
-features:
-  include_slope: true
-
 training:
   random_state: 42
   stage2:
-    hidden_dim: 256
+    d_model: 128
+    nhead: 4
+    num_layers: 3
+    dim_feedforward: 256
     dropout: 0.2
-    batch_size: 256
-    epochs: 50
+    batch_size: 128
+    epochs: 40
     learning_rate: 0.001
     weight_decay: 0.00001
     use_balanced_loss: true
 
 inference:
   anomaly_flag_col: "is_anomaly"
-  min_anomaly_points_per_segment: 1
   min_anomaly_ratio_per_window: 0.1
   unknown_threshold: 0.5
 
